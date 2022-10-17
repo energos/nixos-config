@@ -259,6 +259,7 @@ in
     joe
     emacs-nox
     tmux
+    xclip
     mc
     htop
     neofetch
@@ -301,6 +302,41 @@ in
   #   enable = true;
   #   enableSSHSupport = true;
   # };
+
+  programs.tmux = {
+    enable = true;
+    terminal = "screen-256color";
+    baseIndex = 1;
+    clock24 = true;
+    historyLimit = 100000;
+    extraConfig = ''
+      set -g prefix S-F1
+      set -g prefix2 C-b
+      bind S-F1 send-prefix -2
+      bind C-b send-prefix -2
+      bind r source-file ~/.tmux.conf \; display "Reloaded!"
+      unbind %
+      unbind '"'
+      bind | split-window -h
+      bind '\' split-window -h
+      bind - split-window -v
+      set -g repeat-time 500
+      set -g status-style fg=white,bg=black
+      set -g window-status-style fg=cyan,bg=default,dim
+      set -g window-status-current-style fg=white,bg=blue,bright
+      set -g pane-border-style fg=white,bg=black
+      set -g pane-active-border-style fg=cyan,bg=black
+      set -g message-style fg=white,bg=black,bright
+      set -g status-justify centre
+      bind C-c run -b "tmux save-buffer - | xclip -i"
+      bind C-v run -b "tmux set-buffer \"$(xclip -o)\"; tmux paste-buffer"
+      unbind +
+      unbind =
+      bind + new-window -d -n tmux-zoom  \; swap-pane -s tmux-zoom.0 \; select-window -t tmux-zoom
+      bind = last-window \; swap-pane -s tmux-zoom.0 \; kill-window -t tmux-zoom
+      bind b choose-buffer
+    '';
+  };
 
   # List services that you want to enable:
 
