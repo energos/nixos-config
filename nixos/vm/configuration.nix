@@ -207,7 +207,14 @@ in
     # list size in megabytes
     export BLOCKSIZE=M
     # your favorite editor
-    export EDITOR=zile
+    emacs_nox () {
+      emacs -Q -nw -nbc --eval "(setq visible-cursor nil)" "$@"
+    }
+    export -f emacs_nox
+    export EDITOR=emacs_nox
+    if [[ ''${EUID} == 0 ]] ; then
+      alias emacs=emacs_nox
+    fi
   '';
 
   programs.bash.shellAliases = {
