@@ -345,6 +345,35 @@ in
     '';
   };
 
+  programs.git = {
+    enable = true;
+    config = {
+      core = {
+        excludesfile = "~/.gitignore";
+        pager = "less -iFXR";
+        autocrlf = "false";
+        editor = "emacs_nox";
+      };
+      alias = {
+        lg1 = "log --graph --pretty=tformat:'%C(auto)%h%d %s %C(cyan)(%ar)%C(reset)'";
+        lg2 = "log --graph --pretty=tformat:'%C(auto)%h%d %s %C(cyan)(%ar)%C(reset) %C(bold blue)%an%C(reset)'";
+        hist = "!\"git lg1\"";
+        last = "!\"git lg1 -1 HEAD\"";
+        file = "cat-file -t";
+        cat = "cat-file -p";
+        ls = "ls-tree -r";
+        staged = "ls-files -s";
+        unstage = "reset HEAD --";
+      };
+      init = {
+        defaultBranch = "master";
+      };
+      pull = {
+        ff = "only";
+      };
+    };
+  };
+
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon
